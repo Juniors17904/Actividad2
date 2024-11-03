@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Actividad2_JSMV</string>
+    <string name="lbl_Btn_Registar">Registrar</string>
+    <string name="lbl_Btn_Actualizar">Actualizar</string>
+    <string name="lbl_Btn_Eliminar">Eliminar</string>
+
+    <string-array name="estados">
+        <item>No Iniciado</item>
+        <item>Retrasado</item>
+        <item>Ejecutando</item>
+        <item>Terminado</item>
+    </string-array>
+</resources>
