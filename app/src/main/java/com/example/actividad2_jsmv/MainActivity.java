@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         Log.i("Main", "Iniciando");
         enlazarControles();
+        fecha();
         configurarBotones();
         listar();
         cargarEstadosEnSpinner();
@@ -273,6 +274,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             btnRegistrar.setText(getResources().getString(R.string.lbl_Btn_Actualizar));
         }
+    }
+
+    private void fecha() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        txtFecha.setText(String.format("%02d/%02d/%d", day, month + 1, year));
     }
 
     @Override

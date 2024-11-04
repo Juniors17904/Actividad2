@@ -84,10 +84,9 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputLayoutFecha"
-        android:layout_width="210dp"
+        android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginStart="5dp"
         android:clickable="false"
         android:hint="Fecha"
         app:layout_constraintBottom_toTopOf="@+id/btnRegistrar"
@@ -105,8 +104,8 @@
 
     <Button
         android:id="@+id/btnFecha"
-        android:layout_width="170dp"
-        android:layout_height="70dp"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
         android:backgroundTint="#948A40"
         android:padding="6dp"
         android:text="Seleccionar Fecha"
