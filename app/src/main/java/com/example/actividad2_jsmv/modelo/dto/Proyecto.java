@@ -60,17 +60,6 @@ public class Proyecto {
         this.fecha = fecha;
     }
 
-//    @NonNull
-//    @Override
-//    public String toString() {
-//        return "Proyecto{" +
-//                "codigoProyecto=" + codigoProyecto +
-//                ", codigoActividad=" + codigoActividad +
-//                ", estado='" + estado + '\'' +
-//                ", observacion='" + observacion + '\'' +
-//                ", fecha='" + fecha + '\'' +
-//                '}';
-//    }
 
     @NonNull
     @Override

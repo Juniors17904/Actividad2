@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.database.SQLException;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         fecha();
         configurarBotones();
         listar();
-        cargarEstadosEnSpinner();
+        cargarEstados();
         listado.setOnItemClickListener(this);
     }
 
@@ -130,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         Log.i("Infox", resp);
 
+
     }
 
     private void limpiarCajas(boolean b) {
@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btnRegistrar.setText(getResources().getString(R.string.lbl_Btn_Registar));
         txtCodProyecto.requestFocus();
         ocultarTeclado();
+        fecha();
     }
 
     public void ocultarTeclado() {
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    private void cargarEstadosEnSpinner() {
+    private void cargarEstados() {
         Log.i("Main", "Cargar Estados");
 
         ProyectoDAO pDAO = new ProyectoDAO(this);
@@ -190,75 +191,88 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btnBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("Main","Buscar");
-                final EditText buscar = new EditText(MainActivity.this);
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Buscar");
-                builder.setMessage("Codigo de Proyecto");
-                builder.setView(buscar);
-                buscar.setInputType(InputType.TYPE_CLASS_NUMBER);
-                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String CodP=buscar.getText().toString();
-                        Log.i("Main","Buscar:"+CodP);
-                        if(!CodP.isEmpty()){
-                            try {
-                            int id = Integer.parseInt(CodP);
-                            ProyectoDAO pDAO = new ProyectoDAO(MainActivity.this);
-                                Proyecto p = pDAO.buscar(id);
-                                if (p == null) {
-                                    Snackbar.make(v, "No se encontró el proyecto con el código especificado", Snackbar.LENGTH_LONG)
-                                            .setBackgroundTint(getColor(R.color.rojo)).show();
-
-                                } else {
-                                    mostrar(p);
-                                    Snackbar.make(v, "Registros encontrados", Snackbar.LENGTH_LONG)
-                                            .setBackgroundTint(getColor(R.color.azul)).show();
-
-                                }
-                            }catch(SQLException ex){
-                                Log.i("Main","No se encontro busqueda");
-                                Snackbar.make(v, ex.getMessage(), Snackbar.LENGTH_LONG)
-                                        .setBackgroundTint(getColor(R.color.rojo)).show();
-
-                            }
-                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ocultarTeclado();
-                                }
-                            }, 100);
-
-                        }
-                    }
-                });
-                builder.show();
+            buscar(v);
             }
         });
 
     }
 
-    private void eliminar(View V) {
-        String codigoP= txtCodProyecto.getText().toString();
-        int id =0;
-        if (!codigoP.trim().equals("")){
-            ProyectoDAO pDAO = new ProyectoDAO(this);
-            id = Integer.parseInt(codigoP);
-            String resp = pDAO.eliminar(id);
-            if(resp.equals("")){
-                Snackbar.make(V,"Registro eliminiado",Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.azul)).show();
-                listar();
-                limpiarCajas(true);
+    private void buscar(View v) {
+        Log.i("Main","Buscar");
+        final EditText buscar = new EditText(MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Buscar");
+        builder.setMessage("Codigo de Proyecto");
+        builder.setView(buscar);
+        buscar.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
             }
+        });
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String CodP=buscar.getText().toString();
+                Log.i("Main","Buscar:"+CodP);
+                if(!CodP.isEmpty()){
+                    try {
+                        int id = Integer.parseInt(CodP);
+                        ProyectoDAO pDAO = new ProyectoDAO(MainActivity.this);
+                        Proyecto p = pDAO.buscar(id);
+                        if (p == null) {
+                            Snackbar.make(v, "No existe el codigo Proyecto "+ CodP, Snackbar.LENGTH_LONG)
+                                    .setBackgroundTint(getColor(R.color.rojo)).show();
+
+                        } else {
+                            mostrar(p);
+                            Snackbar.make(v, "Registros encontrados", Snackbar.LENGTH_LONG)
+                                    .setBackgroundTint(getColor(R.color.azul)).show();
+
+                        }
+                    }catch(SQLException ex){
+                        Log.i("Main","No se encontro busqueda");
+                        Snackbar.make(v, ex.getMessage(), Snackbar.LENGTH_LONG)
+                                .setBackgroundTint(getColor(R.color.rojo)).show();
+
+                    }
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ocultarTeclado();
+                        }
+                    }, 100);
+
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void eliminar(View V) {
+        String codigoP = txtCodProyecto.getText().toString().trim();
+
+        if (codigoP.isEmpty()) {
+            Snackbar.make(V, "Se necesita el Código del Proyecto", Snackbar.LENGTH_LONG)
+                    .setBackgroundTint(getColor(R.color.rojo)).show();
+            return;
         }
 
+        int id = Integer.parseInt(codigoP);
+        ProyectoDAO pDAO = new ProyectoDAO(this);
+        String resp = pDAO.eliminar(id);
+
+        if (resp.isEmpty()) {
+            Snackbar.make(V, "Registro eliminado ", Snackbar.LENGTH_LONG)
+                    .setBackgroundTint(getColor(R.color.azul)).show();
+        } else {
+            Snackbar.make(V, resp, Snackbar.LENGTH_LONG)
+                    .setBackgroundTint(getColor(R.color.rojo)).show();
+        }
+
+        listar();
+        limpiarCajas(true);
     }
 
     private void mostrar(Proyecto p) {

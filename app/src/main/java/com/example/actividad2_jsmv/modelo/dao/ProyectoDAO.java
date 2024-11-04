@@ -45,13 +45,18 @@ public class ProyectoDAO {
     }
 
     public String eliminar(int id) {
+        Log.i("ProyectoDao","Codigo obtenido"+id);
         String resp = "";
         String[] parametros = {String.valueOf(id)};
+        int f = 0;
         try {
-            db.delete(ConstantesApp.TABLA_PROYECTO, "codigo_proyecto=?", parametros);
-            Log.i("ProductDAO","ELIMINANDO");
+            f = db.delete(ConstantesApp.TABLA_PROYECTO, "codigo_proyecto=?", parametros);
+            Log.i("ProductDAO", "Filas Eliminadas" +f);
         } catch (SQLException ex) {
             resp = ex.getMessage();
+        }
+        if (f == 0) {
+            resp = "El codigo de Proyecto no existe ";
         }
         return resp;
 
@@ -81,17 +86,19 @@ public class ProyectoDAO {
     }
 
     public ArrayList<String> obtenerEstados() {
-        ArrayList<String> estados = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT nombre FROM estado", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                estados.add(cursor.getString(0)); // Agregar el nombre del estado a la lista
-            } while (cursor.moveToNext());
+        ArrayList<String> listEstados = new ArrayList<>();
+        String Consulta="SELECT  nombre FROM " + ConstantesApp.TABLA_ESTADOS + ";";
+        Cursor cursor = db.rawQuery(Consulta, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    listEstados.add(cursor.getString(0));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            Log.i("ProductDAO", "MOSTRAR ESTADO");
         }
-        cursor.close();
-        Log.i("ProductDAO","MOSTRAR ESTADO");
-        return estados; // Retornar la lista de estados
+        return listEstados;
     }
 
     public String update(Proyecto p) {
